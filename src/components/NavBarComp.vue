@@ -18,7 +18,7 @@
           State
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <router-link to="/Map">
+          <router-link to="/Map/100">
             <a class="dropdown-item" href="#">VIC</a>
           </router-link>
           <a class="dropdown-item" href="#">NSW</a>
@@ -31,7 +31,7 @@
           Feature
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <router-link to="/Map">
+          <router-link to="/Map/100">
             <a class="dropdown-item" href="#">Google Map</a>
           </router-link>
           <a class="dropdown-item" href="#">List view</a>

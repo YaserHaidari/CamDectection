@@ -33,7 +33,7 @@ const router = VueRouter.createRouter({
             component: Info
         },
         {
-            path: '/Map',
+            path: '/Map/:id',
             name: 'Map',
             component: Maps
         }

@@ -3,7 +3,7 @@
      <div class="col-12" id="headerContainer">
             <h1>Approved mobile phone & seatbelt detection camera locations in Victoria</h1>
             <small>Published & updated by <a href="https://www.vic.gov.au/approved-mobile-camera-locations">Vicroad</a></small>
-            <button class="btn btn-secondary" @click="reportCam()">Report Camera here</button>
+            <button class="btn btn-warning" @click="reportCam(center.lat, center.lng)">Report Camera here</button>
         </div>
         <table class="col-12">
             <thead>
@@ -42,6 +42,7 @@
     
     import NavBarComp from '../components/NavBarComp.vue'
     // import { getAuth, onAuthStateChanged } from 'firebase/auth'
+    import axios from 'axios';
 
     export default {
         name: 'HomeScreen',
@@ -58,13 +59,16 @@
                 msg: '',
                 screenWidth: window.innerWidth,
                 screenHeight: window.innerHeight,
-                showLatLong: true
+                showLatLong: true,
+                suburb: '',  // Add this line
+                road: '',  // Add this line
+                post_code: ''  // Add this line
             }
         },
 
         methods:{
             doMoreInfo(index){
-                this.$router.push({ name: 'Info', params: { id: index } });
+                this.$router.push({ name: 'Map', params: { id: index } });
             },
             handleSearch(searchText){
                 let Data = this.Data;
@@ -80,37 +84,73 @@
             },
             upVoteBtn(id){
                 console.log(id+1);
-                var putSQLApiURL = `/cos20031/s104608220/api/apis2.php/${id + 1}`;
+                var putSQLApiURL = `/cos20031/s104608220/api/apis2.php/${this.filteredData[id].id}`;
+                const requestOptions = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "Upvote": 1 // Example: Increment Upvote by 1
+                    })
+                };
 
-    // PUT request using fetch with error handling
-    const requestOptions = {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "Upvote": 1 // Example: Increment Upvote by 1
-        })
-    };
-
-    fetch(putSQLApiURL, requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Parse response as JSON
-        })
-        .then(data => {
-            console.log(data + "AHAHA");
-            alert("Upvote incremented successfully");
-            location.reload();
-            // Optionally update UI or perform additional actions after successful update
-        })
-        .catch(error => console.error("Error:", error));
+                fetch(putSQLApiURL, requestOptions).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse response as JSON
+                }).then(data => {
+                    console.log(data + "AHAHA");
+                    alert("Upvote incremented successfully");
+                    location.reload();
+                }).catch(error => console.error("Error:", error));
             },
-            reportCam(){
-                console.log(this.center);
-            }
+            async reportCam(lat, lng){
+                if(lat === undefined || lng === undefined){
+                    alert("Please enable location services to report camera");
+                    return;
+                }
+                try {
+                    const response = 
+                    await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCBOwKCfojuQAZcBOxmUulYBsfcRRtR9LU`);
+                    const data = response.data;
+                    if (data.status === 'OK') {
+                        const components = data.results[0].address_components;
+                        const suburb = components.find(component => component.types.includes('locality'));
+                        const road = components.find(component => component.types.includes('route'));
+                        const post_code = components.find(component => component.types.includes('postal_code'));
+                        this.suburb = suburb ? suburb.long_name : null;
+                        this.road = road ? road.long_name : null;
+                        this.post_code = post_code ? post_code.long_name : null;
+                        const postData = {
+                            id: this.Data.length + 1,
+                            Road: this.road,
+                            Suburb: this.suburb,
+                            lat: lat,
+                            lng: lng,
+                            Upvote: 1,
+                            DownVote: 0,
+                            Status: 'Active',
+                            Date: new Date().getMonth() + 1 + '/' + new Date().getDate(),
+                            Day: new Date().getDay(),
+                            Time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        };
+
+            // Send a POST request to the PHP script
+                        await axios.post('/cos20031/s104608220/api/apis.php', postData);
+                        alert("Camera reported successfully");
+                        location.reload();
+            // Log the response from the PHP script
+                        // console.log(postResponse.data);
+                } else {
+                    console.error(data.error_message);
+                    throw new Error(`Geocoding error: ${data.status}`);
+                }
+                } catch (error) {
+                    console.error(error);
+                }
+            },
         }, 
         mounted(){
            if(this.screenWidth < 1000){
