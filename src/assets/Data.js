@@ -14,7 +14,8 @@ const Data = [
         "Category": "AC",
         "lat":"-37.978",
         "long":"145.099",
-        "Column4": "Mar-2023"
+        "Column4": "Mar-2023",
+        "Vote": "",
        },
        {
         "Road": "Centre Dandenong Road",
@@ -22,7 +23,8 @@ const Data = [
         "lat":"-37.971",
         "long":"145.101",
         "Category": "C",
-        "Column4": "Mar-2023"
+        "Column4": "Mar-2023",
+        "Vote": "",
        },
        {
         "Road": "Dandenong Bypass",
@@ -30,7 +32,8 @@ const Data = [
         "lat":"-38.000",
         "long":"145.185",
         "Category": "BC",
-        "Column4": "Jan-2024"
+        "Column4": "Jan-2024",
+        "Vote": "",
        },
        {
         "Road": "Dandenong Road",
@@ -38,7 +41,8 @@ const Data = [
         "lat":"-37.859",
         "long":"145.003",
         "Category": "ABCD",
-        "Column4": "Nov-2023"
+        "Column4": "Nov-2023",
+        "Vote": "",
        },
        {
         "Road": "Dandenong Road",
@@ -46,7 +50,8 @@ const Data = [
         "lat":"-37.858",
         "long":"144.997",
         "Category": "ABCD",
-        "Column4": "Nov-2023"
+        "Column4": "Nov-2023",
+        "Vote": "",
        },
        {
         "Road": "Dandenong Road East",
@@ -54,7 +59,8 @@ const Data = [
         "lat":"-38.136",
         "long":"145.129",
         "Category": "ABC",
-        "Column4": "May-2023"
+        "Column4": "May-2023",
+        "Vote": "",
        },
        {
         "Road": "Dandenong-Hastings Road",
@@ -62,7 +68,8 @@ const Data = [
         "lat":"-38.063",
         "long":"145.243",
         "Category": "C",
-        "Column4": "T"
+        "Column4": "T",
+        "Vote": "",
        },
 ]
 

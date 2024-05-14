@@ -15,27 +15,38 @@
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          State
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <router-link to="/Map">
-            <a class="dropdown-item" href="#">Google Maps</a>
+            <a class="dropdown-item" href="#">VIC</a>
+          </router-link>
+          <a class="dropdown-item" href="#">NSW</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">QLD</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Feature
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <router-link to="/Map">
+            <a class="dropdown-item" href="#">Google Map</a>
           </router-link>
           <a class="dropdown-item" href="#">List view</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Logout</a>
+        <a class="nav-link disabled" href="#">Live coordinates: {{ Livecoordinates }}</a>
+
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li> -->
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2"  type="search"
+       v-model.trim="searchText"
+       @keyup.enter="searchBtn" placeholder="Search" aria-label="Search">
+      <button class="btn btn-primary my-2 my-sm-0" type="submit" @click.prevent="searchBtn">Search</button>
     </form>
   </div>
 </nav>
@@ -63,9 +74,17 @@ nav li{
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 export default {
     name: 'NavBarComp',
+    props: {
+    Livecoordinates: {
+      type: Object,
+      reuqired: true
+
+    }
+  },
     data(){
         return{
-            username: ''
+            username: '',
+            searchText: ''
         }
     },
     created(){
@@ -74,6 +93,20 @@ export default {
                 this.username = user.displayName
             }
         })
+    },
+    methods:{
+        searchBtn(){
+          this.$emit('search', this.searchText)
+        }
+    },
+    watch:{
+      searchText(oldVal, newVal){
+        console.log("old val " +oldVal.length + " new val " + newVal.length)
+        if(oldVal.length === 0 && newVal.length > 0){
+          console.log('searchText is empty')
+          this.$emit('search', '')
+        }
+      }
     }
     
 }

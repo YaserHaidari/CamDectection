@@ -5,14 +5,20 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import 'firebase/auth' // Import Firebase Authentication
 import * as VueRouter from 'vue-router'
-import Home from '@/screens/Homescreen.vue'
-import Register from '@/screens/Registerscreen.vue'
-import Info from '@/screens/Informationscreen.vue'
-import Maps from '@/screens/Mapscreen.vue'
+import Home from './screens/Homescreen.vue'
+import Register from './screens/Registerscreen.vue'
+import Info from './screens/Informationscreen.vue'
+import Maps from './screens/Mapscreen.vue'
 
 const router = VueRouter.createRouter({
-    history: VueRouter.createWebHistory(process.env.BASE_URL),
+    // history: VueRouter.createWebHistory(process.env.BASE_URL),
+    history: VueRouter.createWebHistory("/cos20031/s104608220/dist/"),
+
     routes: [
+        {
+            path: '/',
+            component: Home
+        },
         {
             path: '/Home',
             component: Home
