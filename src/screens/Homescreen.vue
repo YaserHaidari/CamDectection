@@ -3,7 +3,13 @@
      <div class="col-12" id="headerContainer">
             <h1>Approved mobile phone & seatbelt detection camera locations in Victoria</h1>
             <small>Published & updated by <a href="https://www.vic.gov.au/approved-mobile-camera-locations">Vicroad</a></small>
-            <button class="btn btn-warning" @click="reportCam(center.lat, center.lng)">Report Camera here</button>
+            <button class="btn btn-warning" @click="reportCam(center.lat, center.lng)">
+                <i class="fas fa-camera"></i> Report Camera here
+            </button>
+
+            <button style="margin-top: 10px;" v-if="isAdmin" class="btn btn-warning" @click="isAdmin = false">
+                <i class="fas fa-exchange-alt"></i> Switch
+            </button>
         </div>
         <table class="col-12">
             <thead>
@@ -12,8 +18,9 @@
                     <th>Suburb</th>
                     <th v-if="showLatLong">latitude</th>
                     <th v-if="showLatLong">Longitute</th>
-                    <th>More Info</th>
-                    <th>Votes</th>
+                    <th v-if="!isAdmin">More Info</th>
+                    <th v-if="!isAdmin">Votes</th>
+                    <th v-if="isAdmin">Admin Panel</th>
                 </tr>
             </thead>
             <tbody  v-for="(item, index) in filteredData" :key="index">
@@ -22,8 +29,8 @@
                     <td>{{item.Suburb}}</td>
                     <td v-if="showLatLong">{{item.lat}}</td>
                     <td v-if="showLatLong">{{item.lng}}</td>
-                    <td>Votes: {{item.Upvote}}</td>
-                    <td id="tBtn" style="display: flex;flex-direction: row; flex-wrap: wrap;">
+                    <td v-if="!isAdmin">Votes: {{item.Upvote}}</td>
+                    <td v-if="!isAdmin" id="tBtn" style="display: flex;flex-direction: row; flex-wrap: wrap;">
                         <button class="btn btn-link" @click="doMoreInfo(index)">Show</button>
                         <button class="btn btn-success" type="submit" @click="upVoteBtn(index)">
                             <i class="bi bi-hand-thumbs-up"></i>
@@ -31,6 +38,9 @@
                         <button class="btn btn-warning">
                             <i class="bi bi-hand-thumbs-down"></i>
                         </button>
+                    </td>
+                    <td v-if="isAdmin">
+                        <button class="btn btn-warning" @click="deleteRowAdmin(index)">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -42,9 +52,9 @@
     <script>
     
     import NavBarComp from '../components/NavBarComp.vue'
-    // import { getAuth, onAuthStateChanged } from 'firebase/auth'
     import axios from 'axios';
     import FooterComp from '@/components/FooterComp.vue';
+    import { getAuth, onAuthStateChanged } from 'firebase/auth';
     export default {
         name: 'HomeScreen',
         components: {
@@ -62,9 +72,10 @@
                 screenWidth: window.innerWidth,
                 screenHeight: window.innerHeight,
                 showLatLong: true,
-                suburb: '',  // Add this line
-                road: '',  // Add this line
-                post_code: ''  // Add this line
+                suburb: '', 
+                road: '', 
+                post_code: '' ,
+                isAdmin: false
             }
         },
 
@@ -108,6 +119,17 @@
                     location.reload();
                 }).catch(error => console.error("Error:", error));
             },
+            // reportCam(lat, lng){
+            //     console.log("Reported Camera at: " + lat + ", " + lng);
+            //     // console.log(this.filteredData)
+            //     // this.filteredData.map(item => {
+            //     //     console.log(item.Road === "Brady Road")
+            //     // })
+            //     const mappedData = this.filteredData.filter(item => {
+            //         return item.Road === "Brady Road"
+            //     })
+            //     console.log(mappedData)
+            // }
             async reportCam(lat, lng){
                 if(lat === undefined || lng === undefined){
                     alert("Please enable location services to report camera");
@@ -125,7 +147,14 @@
                         this.suburb = suburb ? suburb.long_name : null;
                         this.road = road ? road.long_name : null;
                         this.post_code = post_code ? post_code.long_name : null;
-                    if (confirm(`You are reporting a camera at ${this.road}, ${this.suburb}, ${this.post_code}. Do you want to proceed?`)) {
+                        const hasMatchingItem = this.filteredData.some(item => {
+                            return item.Road === this.road && item.Suburb === this.suburb;
+                        });
+                        if(hasMatchingItem){
+                            alert("Camera already reported at this location");
+                            return;
+                        } else {
+                        if (confirm(`You are reporting a camera at ${this.road}, ${this.suburb}, ${this.post_code}. Do you want to proceed?`)) {
                         const postData = {
                             id: this.Data.length + 1,
                             Road: this.road,
@@ -145,7 +174,7 @@
                     } else {
                         console.log('Report cancelled')
                     }
-                } else {
+                }} else {
                     console.error(data.error_message);
                     throw new Error(`Geocoding error: ${data.status}`);
                 }
@@ -158,26 +187,31 @@
            if(this.screenWidth < 1000){
                this.showLatLong = false;
            }
-        var self = this;
-        var readSQLApiURL = '/cos20031/s104608220/api/apis.php';
-        fetch(readSQLApiURL)
-        .then(response => response.json())
-        .then(data => {
-            self.Data = data;
-            self.filteredData = [...data];
-            console.log(self.filteredData)
-            self.msg = "Successful!";
-        }).catch(error => {
-            self.err = error;
-            console.log(self.err);
-        });},
+            var self = this;
+            var readSQLApiURL = '/cos20031/s104608220/api/apis.php';
+            fetch(readSQLApiURL).then(response => response.json()).then(data => {
+                self.Data = data;
+                self.filteredData = [...data];
+                console.log(self.filteredData)
+                self.msg = "Successful!";
+            }).catch(error => {
+                self.err = error;
+                console.log(self.err);
+            });},
 
-    created(){
-    navigator.geolocation.getCurrentPosition(position => {
-        this.center = {
-            lat: position.coords.latitude.toFixed(4),
-            lng: position.coords.longitude.toFixed(4)
-        }
+        created(){
+            onAuthStateChanged(getAuth(), user => {
+                if(user){
+                    if(user.email === 'yhaidari99@gmail.com'){
+                        this.isAdmin = true;
+                    }
+                }
+            })
+            navigator.geolocation.getCurrentPosition(position => {
+            this.center = {
+                lat: position.coords.latitude.toFixed(4),
+                lng: position.coords.longitude.toFixed(4)
+            }
     }) }
     }
     </script>

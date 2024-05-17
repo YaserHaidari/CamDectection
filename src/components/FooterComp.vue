@@ -25,10 +25,10 @@
         </div>
         <div class="col-2" style="align-items: flex-start !important;">
             <h3>Socials</h3>
-            <p>Instagram</p>
-            <p>Github</p>
-            <p>Email</p>
-            <p>Phone number</p>
+            <p><i class="fab fa-instagram"></i> Instagram</p>
+            <p><i class="fab fa-github"></i> Github</p>
+            <p><i class="fas fa-envelope"></i> Email</p>
+            <p><i class="fas fa-phone"></i> Phone number</p>
         </div>
     </div>
 </template>

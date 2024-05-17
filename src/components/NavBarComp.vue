@@ -35,9 +35,9 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <router-link to="/Map/100">
-            <a class="dropdown-item" href="#">Google Map</a>
+            <a class="dropdown-item" href="#"><i class="fas fa-map-marked-alt"></i> Google Map</a>
           </router-link>
-          <a class="dropdown-item" href="#">List view</a>
+           <a class="dropdown-item" href="#"><i class="fas fa-list"></i> List view</a>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -45,10 +45,10 @@
           Setting
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#" @click="logoutUserBtn()">Log out</a>
-            <router-link to="/Account">
-              <a class="dropdown-item" href="#">Account details</a>
-            </router-link>
+          <a class="dropdown-item" href="#" @click="logoutUserBtn()"><i class="fas fa-sign-out-alt"></i> Log out</a>
+          <router-link to="/Account">
+            <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Account details</a>
+          </router-link>
         </div>
       </li>
       <li class="nav-item">
@@ -83,6 +83,7 @@ nav > *{
 nav li{
     padding-left: 15px;
 }
+
 </style>
 <script>
 
