@@ -17,7 +17,7 @@ const router = VueRouter.createRouter({
     routes: [
         {
             path: '/',
-            component: Home
+            component: Register
         },
         {
             path: '/Home',

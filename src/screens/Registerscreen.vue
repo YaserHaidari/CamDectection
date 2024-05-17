@@ -3,7 +3,6 @@
    <transition name="fade">
       <div v-if="!registerActive" class="wallpaper-login"></div>
    </transition>
-   <div class="wallpaper-register"></div>
    <div class="container">
       <div class="row">
          <div class="col-lg-4 col-md-6 col-sm-8 mx-auto">
@@ -22,10 +21,10 @@
             <div v-else class="card register" v-bind:class="{ error: emptyFields }">
                <h1>Sign Up</h1>
                <form class="form-group">
-                  <input v-model="nameReg" type="text" class="form-control" placeholder="Name" required>
-                  <input v-model="emailReg" type="email" class="form-control" placeholder="Email" required>
-                  <input v-model="passwordReg" type="password" class="form-control" placeholder="Password" required>
-                  <input v-model="confirmReg" type="password" class="form-control" placeholder="Confirm Password" required>
+                  <input v-model.trim="nameReg" type="text" class="form-control" placeholder="Name" required>
+                  <input v-model.trim="emailReg" type="email" class="form-control" placeholder="Email" required>
+                  <input v-model.trim="passwordReg" type="password" class="form-control" placeholder="Password" required>
+                  <input v-model.trim="confirmReg" type="password" class="form-control" placeholder="Confirm Password" required>
                   <input type="submit" class="btn btn-primary" @click.prevent="doRegister">
                   <p>Already have an account? <a href="#" @click="registerActive = !registerActive, emptyFields = false">Sign in here</a>
                   </p>
@@ -37,14 +36,18 @@
       </div>
    </div>
 </div>
+<FooterComp/>
 </template>
 
 <script>
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-
+import FooterComp from '@/components/FooterComp.vue'
 export default {
    
    name: 'HelloWorld',
+   components: {
+      FooterComp
+   },
    data(){
       return{
          nameReg: '',
@@ -60,9 +63,21 @@ export default {
    },
    methods:{
       doRegister(){
+         if(this.nameReg === '' || this.emailReg === '' || this.passwordReg === '' || this.confirmReg === ''){
+            this.emptyFields = true
+            this.errMsg = 'Please fill in all fields'
+            return
+         } else if (this.emailReg.indexOf('@') === -1 || this.emailReg.indexOf('.') === -1){
+            this.emptyFields = true
+            this.errMsg = 'Invalid email'
+            return
+         } else if(this.passwordReg !== this.confirmReg){
+            this.emptyFields = true
+            this.errMsg = 'Passwords do not match'
+            return
+         }
          const auth = getAuth()
          createUserWithEmailAndPassword(auth, this.emailReg, this.passwordReg).then((userCredential) => {
-            // Signed in 
             const user = userCredential.user;
             this.errMsg = ''
             localStorage.setItem('isLoggedIn', true)
@@ -101,9 +116,12 @@ export default {
       }
    },
    created(){
-      if(localStorage.getItem('currentUser')){
-         this.isLoggedIn = true
+      if(localStorage.getItem('isLoggedIn')){
+         this.$router.push('/home')
       }
+      // if(localStorage.getItem('isLoggedIn')){
+      //    this.isLoggedIn = true
+      // }
    }
 }
 
@@ -111,6 +129,18 @@ export default {
 
 
 <style scoped>
+nav{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1.1rem;
+    font-weight: 500;
+    background-color: #563D7C;
+}
+nav > *{
+    padding: 20px;
+}
+nav li{
+    padding-left: 15px;
+}
 p {
    line-height: 1rem;
 }
@@ -129,16 +159,7 @@ p {
    align-items: center;
    display: flex;
    height: 100vh;
-
-   .wallpaper-login {
-      background: url(https://images.pexels.com/photos/32237/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260)
-         no-repeat center center;
-      background-size: cover;
-      height: 100%;
-      position: absolute;
-      width: 100%;
-   }
-   
+}
    .fade-enter-active,
    .fade-leave-active {
   transition: opacity .5s;
@@ -147,21 +168,10 @@ p {
    .fade-leave-to {
       opacity: 0;
    }
-   
-   .wallpaper-register {
-      background: url(https://images.pexels.com/photos/533671/pexels-photo-533671.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260)
-         no-repeat center center;
-      background-size: cover;
-      height: 100%;
-      position: absolute;
-      width: 100%;
-      z-index: -1;
-   }
 
    h1 {
       margin-bottom: 1.5rem;
    }
-}
 
 .error {
    animation-name: errorShake;

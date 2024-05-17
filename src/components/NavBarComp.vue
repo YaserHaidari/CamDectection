@@ -37,6 +37,15 @@
           <a class="dropdown-item" href="#">List view</a>
         </div>
       </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Setting
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#" @click="logoutUserBtn()">Log out</a>
+          <a class="dropdown-item" href="#">Account details</a>
+        </div>
+      </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#">Live coordinates: {{ Livecoordinates }}</a>
 
@@ -71,6 +80,7 @@ nav li{
 }
 </style>
 <script>
+
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 export default {
     name: 'NavBarComp',
@@ -97,6 +107,15 @@ export default {
     methods:{
         searchBtn(){
           this.$emit('search', this.searchText)
+        },
+        logoutUserBtn(){
+          const auth = getAuth()
+          auth.signOut().then(() => {
+            localStorage.removeItem('isLoggedIn')
+            this.$router.push('/Register')
+          }).catch((error) => {
+            console.log(error)
+          });
         }
     },
     watch:{
