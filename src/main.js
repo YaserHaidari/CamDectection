@@ -4,16 +4,16 @@ import { firestorePlugin } from 'vuefire'
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import 'firebase/auth' // Import Firebase Authentication
-import * as VueRouter from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from './screens/Homescreen.vue'
 import Register from './screens/Registerscreen.vue'
 import Info from './screens/Informationscreen.vue'
 import Maps from './screens/Mapscreen.vue'
+import Account from './screens/Accountscreen.vue'
+import Underconstruction from './screens/UnderConstructionscreen.vue'
 
-const router = VueRouter.createRouter({
-    // history: VueRouter.createWebHistory(process.env.BASE_URL),
-    history: VueRouter.createWebHistory("/cos20031/s104608220/dist/"),
-
+const router = createRouter({
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',
@@ -36,10 +36,18 @@ const router = VueRouter.createRouter({
             path: '/Map/:id',
             name: 'Map',
             component: Maps
-        }
+        },
+        {
+            path: '/Account',
+            component: Account
+        },
+        {
+            path: '/Underconstruction',
+            component: Underconstruction
+        },
     ]
-
 })
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDD25vvASFhLog8Prp3XrPadgBzVSOTg08",

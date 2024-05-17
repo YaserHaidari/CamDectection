@@ -15,6 +15,7 @@
                   <p>Don't have an account? <a href="#" @click="registerActive = !registerActive, emptyFields = false">Sign up here</a>
                   </p>
                   <p><a href="#">Forgot your password?</a></p>
+                  <p>{{errMsg}}</p>
                </form>
             </div>
 
@@ -43,8 +44,8 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import FooterComp from '@/components/FooterComp.vue'
 export default {
-   
-   name: 'HelloWorld',
+   //changed
+   name: 'RegisterUser',
    components: {
       FooterComp
    },
@@ -97,9 +98,20 @@ export default {
          });
       },
       doLogin(){
+         if(this.emailLogin === '' || this.passwordLogin === ''){
+            this.emptyFields = true
+            this.errMsg = 'Please fill in all fields'
+            return
+         }
+         if(this.emailLogin.indexOf('@') === -1 || this.emailLogin.indexOf('.') === -1){
+            this.emptyFields = true
+            this.errMsg = 'Invalid email'
+            return
+         }
          const auth = getAuth();
          signInWithEmailAndPassword(auth, this.emailLogin, this.passwordLogin).then(() => {
             // const user = userCredential.user;
+            this.errMsg = ''
             this.$router.push("/home")
             localStorage.setItem('isLoggedIn', true)
          }).catch((error) => {
@@ -110,7 +122,11 @@ export default {
                this.errMsg = 'Wrong password'
             } else if (error.code === 'auth/invalid-email'){
                this.errMsg = 'Invalid email'
+            }else if (error.code === 'auth/invalid-credential'){
+               this.errMsg = 'Wrong password or email. Please try again'
             }
+
+           
          });
 
       }

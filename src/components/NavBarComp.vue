@@ -21,9 +21,12 @@
           <router-link to="/Map/100">
             <a class="dropdown-item" href="#">VIC</a>
           </router-link>
-          <a class="dropdown-item" href="#">NSW</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">QLD</a>
+          <router-link to="/Underconstruction">
+            <a class="dropdown-item" href="#">NSW</a>
+          </router-link>
+          <router-link to="/Underconstruction">
+            <a class="dropdown-item" href="#">QLD</a>
+          </router-link>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -43,7 +46,9 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#" @click="logoutUserBtn()">Log out</a>
-          <a class="dropdown-item" href="#">Account details</a>
+            <router-link to="/Account">
+              <a class="dropdown-item" href="#">Account details</a>
+            </router-link>
         </div>
       </li>
       <li class="nav-item">

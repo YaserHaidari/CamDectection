@@ -35,6 +35,7 @@
                 </tr>
             </tbody>
         </table>
+        <FooterComp/>
     </template>
 
 
@@ -43,11 +44,12 @@
     import NavBarComp from '../components/NavBarComp.vue'
     // import { getAuth, onAuthStateChanged } from 'firebase/auth'
     import axios from 'axios';
-
+    import FooterComp from '@/components/FooterComp.vue';
     export default {
         name: 'HomeScreen',
         components: {
             NavBarComp,
+            FooterComp
         },
         data(){
             return{
@@ -123,6 +125,7 @@
                         this.suburb = suburb ? suburb.long_name : null;
                         this.road = road ? road.long_name : null;
                         this.post_code = post_code ? post_code.long_name : null;
+                    if (confirm(`You are reporting a camera at ${this.road}, ${this.suburb}, ${this.post_code}. Do you want to proceed?`)) {
                         const postData = {
                             id: this.Data.length + 1,
                             Road: this.road,
@@ -136,13 +139,12 @@
                             Day: new Date().getDay(),
                             Time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         };
-
-            // Send a POST request to the PHP script
                         await axios.post('/cos20031/s104608220/api/apis.php', postData);
                         alert("Camera reported successfully");
                         location.reload();
-            // Log the response from the PHP script
-                        // console.log(postResponse.data);
+                    } else {
+                        console.log('Report cancelled')
+                    }
                 } else {
                     console.error(data.error_message);
                     throw new Error(`Geocoding error: ${data.status}`);
