@@ -38,6 +38,9 @@
             <a class="dropdown-item" href="#"><i class="fas fa-map-marked-alt"></i> Google Map</a>
           </router-link>
            <a class="dropdown-item" href="#"><i class="fas fa-list"></i> List view</a>
+           <router-link to="/Underconstruction">
+            <a class="dropdown-item" href="#"><i class="fas fa-camera"></i> Camera near me</a>
+          </router-link>
         </div>
       </li>
       <li class="nav-item dropdown">
