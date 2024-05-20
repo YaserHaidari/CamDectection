@@ -32,10 +32,10 @@
                     <td v-if="!isAdmin">Votes: {{item.Upvote}}</td>
                     <td v-if="!isAdmin" id="tBtn" style="display: flex;flex-direction: row; flex-wrap: wrap;">
                         <button class="btn btn-link" @click="doMoreInfo(index)">Show</button>
-                        <button class="btn btn-success" type="submit" @click="voteBtn(index, 'UPVOTE')">
+                        <button class="btn btn-success" type="submit" @click="upVoteBtn(index)">
                             <i class="bi bi-hand-thumbs-up"></i>
                         </button>
-                        <button class="btn btn-warning" type="submit" @click="voteBtn(index, 'DOWNVOTE')">
+                        <button class="btn btn-warning">
                             <i class="bi bi-hand-thumbs-down"></i>
                         </button>
                     </td>
@@ -95,32 +95,19 @@
                 })
                 this.filteredData = searchedData
             },
-            voteBtn(id, type){
-                console.log(type)
+            upVoteBtn(id){
                 console.log(id+1);
                 var putSQLApiURL = `/cos20031/s104608220/api/apis2.php/${this.filteredData[id].id}`;
-                let requestOptions;
-                if(type === "DOWNVOTE"){
-                    console.log("Downvote")
-                    requestOptions = {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "Upvote": -1 // Example: Increment Upvote by 1
-                        })
-                    };
-                } else {
-                    requestOptions = {
+                const requestOptions = {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         "Upvote": 1 // Example: Increment Upvote by 1
-                    })};
-                }
+                    })
+                };
+
                 fetch(putSQLApiURL, requestOptions).then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -184,28 +171,6 @@
                     console.error(error);
                 }
             },
-            deleteRowAdmin(id){
-                console.log(id+1);
-                console.log("btn clicked")
-                var deleteSQLApiURL = `/cos20031/s104608220/api/apis4.php/${this.filteredData[id].id}`;
-                const requestOptions = {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                };
-
-                fetch(deleteSQLApiURL, requestOptions).then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // Parse response as JSON
-                }).then(data => {
-                    console.log(data + "AHAHA");
-                    alert("Row deleted successfully");
-                    location.reload();
-                }).catch(error => console.error("Error:", error));
-            }
         }, 
         mounted(){
            if(this.screenWidth < 1000){

@@ -116,15 +116,14 @@
         const infoWindow = new this.google.maps.InfoWindow({
             content: `<h1>${location.title}</h1>
             <p>Surburb: ${location.description}</p>
-            <p>id: ${location.id}</p>
-            <p>Camera status: Live</p>
+            <p>Camera status: UNKOWN</p>
             <h5>Reported details</h3>
             <ul>
               <li>Day: ${location.reportedDay}</li>
               <li>Time: ${location.reportedTime}</li>
               <li>Date: ${location.reportedDate}</li>
             </ul>
-            <p>Upvotes: ${location.Upvote}</p>`
+            <p><strong>Votes: ${location.Upvote}</strong></p>`
         });
   const marker = new this.google.maps.Marker({
     position: { lat: location.lat, lng: location.lng },
