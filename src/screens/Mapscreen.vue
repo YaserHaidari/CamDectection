@@ -54,10 +54,7 @@
         .then(response => response.json())
         .then(data => {
             self.DataArray = [...data]; 
-            console.log('heres data set')
-            console.log(self.DataArray);
-            self.msg = "Successful!";
-            this.id = Number(this.$route.params.id) + 1;
+            this.id = Number(this.$route.params.id);
             let foundItem = self.DataArray.find((item) => Number(item.id) === this.id);
             if(foundItem){
               this.center = {

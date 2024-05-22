@@ -32,10 +32,10 @@
                     <td v-if="!isAdmin">Votes: {{item.Upvote}}</td>
                     <td v-if="!isAdmin" id="tBtn" style="display: flex;flex-direction: row; flex-wrap: wrap;">
                         <button class="btn btn-link" @click="doMoreInfo(index)">Show</button>
-                        <button class="btn btn-success" type="submit" @click="upVoteBtn(index)">
+                        <button class="btn btn-success" type="submit" @click="voteBtn(index, 'UPVOTE')">
                             <i class="bi bi-hand-thumbs-up"></i>
                         </button>
-                        <button class="btn btn-warning">
+                        <button class="btn btn-warning" type="submit" @click="voteBtn(index, 'DOWNVOTE')">
                             <i class="bi bi-hand-thumbs-down"></i>
                         </button>
                     </td>
@@ -81,7 +81,11 @@
 
         methods:{
             doMoreInfo(index){
-                this.$router.push({ name: 'Map', params: { id: index } });
+                const item = this.filteredData.filter(item => {
+                    return item.Road === this.filteredData[index].Road;
+                })
+                console.log(item[0]['id'])
+                this.$router.push({ name: 'Map', params: { id: item[0]['id'] } });
             },
             handleSearch(searchText){
                 let Data = this.Data;
@@ -95,19 +99,32 @@
                 })
                 this.filteredData = searchedData
             },
-            upVoteBtn(id){
+            voteBtn(id, type){
+                console.log(type)
                 console.log(id+1);
                 var putSQLApiURL = `/cos20031/s104608220/api/apis2.php/${this.filteredData[id].id}`;
-                const requestOptions = {
+                let requestOptions;
+                if(type === "DOWNVOTE"){
+                    console.log("Downvote")
+                    requestOptions = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "Upvote": -1 // Example: Increment Upvote by 1
+                        })
+                    };
+                } else {
+                    requestOptions = {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         "Upvote": 1 // Example: Increment Upvote by 1
-                    })
-                };
-
+                    })};
+                }
                 fetch(putSQLApiURL, requestOptions).then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -145,7 +162,6 @@
                         } else {
                         if (confirm(`You are reporting a camera at ${this.road}, ${this.suburb}, ${this.post_code}. Do you want to proceed?`)) {
                         const postData = {
-                            id: this.Data.length + 1,
                             Road: this.road,
                             Suburb: this.suburb,
                             lat: lat,
@@ -171,6 +187,28 @@
                     console.error(error);
                 }
             },
+            deleteRowAdmin(id){
+                console.log(id+1);
+                console.log("btn clicked")
+                var deleteSQLApiURL = `/cos20031/s104608220/api/apis4.php/${this.filteredData[id].id}`;
+                const requestOptions = {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                fetch(deleteSQLApiURL, requestOptions).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse response as JSON
+                }).then(data => {
+                    console.log(data + "AHAHA");
+                    alert("Row deleted successfully");
+                    location.reload();
+                }).catch(error => console.error("Error:", error));
+            }
         }, 
         mounted(){
            if(this.screenWidth < 1000){
@@ -194,6 +232,10 @@
                     if(user.email === 'yhaidari99@gmail.com'){
                         this.isAdmin = true;
                     }
+                    console.log(user.email)
+                } else {
+                    console.log("No user signed in")
+                    this.$router.push({ name: 'Register' });
                 }
             })
             navigator.geolocation.getCurrentPosition(position => {
