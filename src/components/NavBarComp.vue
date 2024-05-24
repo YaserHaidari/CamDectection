@@ -1,5 +1,4 @@
 <template>
-   <div>
     <nav class="navbar navbar-expand-lg navbar-dark ">
   <a class="navbar-brand" href="#">{{username}}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +66,6 @@
     </form>
   </div>
 </nav>
-   </div>
 </template>
 
 
@@ -79,6 +77,13 @@ nav{
     font-size: 1.1rem;
     font-weight: 500;
     background-color: #563D7C;
+    width: 100%;
+    min-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+
 }
 nav > *{
     padding: 20px;
