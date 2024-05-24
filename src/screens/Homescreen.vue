@@ -28,11 +28,11 @@
             <tr>
                 <td v-if="!isAdmin">{{ item.Road }}</td>
                 <td v-if="!isAdmin">{{ item.Suburb }}</td>
-                <td v-if="isAdmin"><input type="text" :value="item.Road" :placeholder="item.Road" />
-                    <button class="btn btn-success" @click="changeRoadBtnAdmin(item.Road)">Change</button>
+                <td v-if="isAdmin"><input type="text" v-model="newroadName[index]" :placeholder="item.Road" />
+                    <button class="btn btn-success" @click="changeRoadBtnAdmin(item.Road, index)">Modify Road</button>
                 </td>
-                <td v-if="isAdmin"><input type="text" :value="item.Suburb" :placeholder="item.Suburb" />
-                    <button class="btn btn-success">Change</button>
+                <td v-if="isAdmin"><input type="text" v-model="newsuburbName[index]" :placeholder="item.Suburb" />
+                    <button class="btn btn-success" @click="changeSuburbBtn(item.Suburb, index)">Modify Suburb</button>
                 </td>
 
                 <td v-if="!isAdmin">{{ item.lat }}</td>
@@ -84,7 +84,9 @@ export default {
             suburb: '',
             road: '',
             post_code: '',
-            isAdmin: false
+            isAdmin: false,
+            newroadName: [],
+            newsuburbName: [],
         }
     },
 
@@ -147,7 +149,7 @@ export default {
             }).catch(error => console.error("Error:", error));
         },
         async reportCam(lat, lng) {
-            if (lat === undefined || lng === undefined) {
+            if (lat ===  undefined || lng === undefined) {
                 alert("Please enable location services to report camera");
                 return;
             }
@@ -220,20 +222,21 @@ export default {
                 location.reload();
             }).catch(error => console.error("Error:", error));
         },
-        changeRoadBtnAdmin(currentRoad) {
-            console.log(currentRoad)
+        changeRoadBtnAdmin(itemRoad, index) {
+            const currentRoad = this.newroadName[index];
+            console.log(this.newroadName)
             const road = this.filteredData.filter((item) => {
-                return item.Road === currentRoad;
+                return item.Road === itemRoad;
             })
             if (road.length > 0) {
-                var putSQLApiURL = `/cos20031/s104608220/api/apis5.php/${road[0].id}`;
+                var putSQLApiURL = `/cos30043/s104608220/api/apis5.php/${road[0].id}`;
                 let requestOptions = {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        "Road": "AHAHAH" // New road name
+                        "Road": currentRoad // New road name
                     })
                 };
                 fetch(putSQLApiURL, requestOptions).then(response => {
@@ -244,6 +247,39 @@ export default {
                 }).then(data => {
                     console.log(data);
                     alert("Road updated successfully");
+                    location.reload();
+                }).catch(error => console.error("Error:", error));
+            } else {
+                console.error("Road not found");
+            }
+        },
+
+
+        changeSuburbBtn(itemSuburb, index) {
+            const currentSuburb = this.newsuburbName[index];
+            console.log(this.newsuburbName)
+            const suburb = this.filteredData.filter((item) => {
+                return item.Suburb === itemSuburb;
+            })
+            if (suburb.length > 0) {
+                var putSQLApiURL = `/cos30043/s104608220/api/apis6.php/${suburb[0].id}`;
+                let requestOptions = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "Suburb": currentSuburb // New road name
+                    })
+                };
+                fetch(putSQLApiURL, requestOptions).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse response as JSON
+                }).then(data => {
+                    console.log(data);
+                    alert("Suburb updated successfully");
                     location.reload();
                 }).catch(error => console.error("Error:", error));
             } else {
