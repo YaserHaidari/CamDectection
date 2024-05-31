@@ -1,10 +1,11 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="navbar-content">
   <a class="navbar-brand" href="#">{{username}}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
+  </div>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -77,12 +78,7 @@ nav{
     font-size: 1.1rem;
     font-weight: 500;
     background-color: #563D7C;
-    width: 100%;
-    min-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
+    width: 100vw;
 
 }
 nav > *{
@@ -91,7 +87,10 @@ nav > *{
 nav li{
     padding-left: 15px;
 }
-
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+}
 </style>
 <script>
 

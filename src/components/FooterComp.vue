@@ -54,10 +54,12 @@ export default {
     flex: 1;
     flex-direction: row;
     flex-wrap: wrap;
+    /* margin-right: 1000px; */
 }
 
 #footer-container>div {
     margin-top: 20px;
+    /* margin-right: 200px; */
     display: flex;
     flex: 1;
     flex-direction: column;

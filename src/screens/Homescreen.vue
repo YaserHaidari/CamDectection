@@ -1,5 +1,5 @@
 <template>
-    <NavBarComp :style="{ width: '100vw' }" @search="handleSearch" :Livecoordinates="`lat: ${center.lat}, lng: ${center.lng}`" />
+    <NavBarComp class="NavBarComp" @search="handleSearch" :Livecoordinates="`lat: ${center.lat}, lng: ${center.lng}`" />
     <div class="col-12" id="headerContainer">
         <h1>Approved mobile phone & seatbelt detection camera locations in Victoria</h1>
         <small>Published & updated by <a
@@ -12,15 +12,15 @@
             <i class="fas fa-exchange-alt"></i> Switch
         </button>
     </div>
-    <table class="col-12">
+    <table class="col-12" style="width: 100%;">
         <thead>
             <tr>
                 <th>Road</th>
                 <th>Suburb</th>
-                <th v-if="!isAdmin">latitude</th>
-                <th v-if="!isAdmin">Longitute</th>
-                <th v-if="!isAdmin">More Info</th>
+                <!-- <th v-if="!isAdmin">latitude</th>
+                <th v-if="!isAdmin">Longitute</th> -->
                 <th v-if="!isAdmin">Votes</th>
+                <th>More Info</th>
                 <th v-if="isAdmin">Admin Panel</th>
             </tr>
         </thead>
@@ -34,17 +34,17 @@
                 <td v-if="isAdmin"><input type="text" v-model="newsuburbName[index]" :placeholder="item.Suburb" />
                     <button class="btn btn-success" @click="changeSuburbBtn(item.Suburb, index)">Modify Suburb</button>
                 </td>
-
+<!-- 
                 <td v-if="!isAdmin">{{ item.lat }}</td>
-                <td v-if="!isAdmin">{{ item.lng }}</td>
+                <td v-if="!isAdmin">{{ item.lng }}</td> -->
 
                 <td v-if="!isAdmin">Votes: {{ item.Upvote }}</td>
-                <td v-if="!isAdmin" id="tBtn" style="display: flex;flex-direction: row; flex-wrap: wrap;">
+                <td id="tBtn" style="display: flex; flex-direction: row; flex-wrap: nowrap; min-height: 100px; align-items: center; justify-content: center;">
                     <button class="btn btn-link" @click="doMoreInfo(index)">Show</button>
-                    <button class="btn btn-success" type="submit" @click="voteBtn(index, 'UPVOTE')">
+                    <button style="height: 50%;" class="btn btn-success" type="submit" @click="voteBtn(index, 'UPVOTE')">
                         <i class="bi bi-hand-thumbs-up"></i>
                     </button>
-                    <button class="btn btn-warning" type="submit" @click="voteBtn(index, 'DOWNVOTE')">
+                    <button style="height: 50%;" class="btn btn-warning" type="submit" @click="voteBtn(index, 'DOWNVOTE')">
                         <i class="bi bi-hand-thumbs-down"></i>
                     </button>
                 </td>
@@ -54,7 +54,7 @@
             </tr>
         </tbody>
     </table>
-    <FooterComp :style="{ width: '100vw' }" />
+    <FooterComp class="FooterComp" />
 </template>
 
 
@@ -307,11 +307,13 @@ export default {
     created() {
         onAuthStateChanged(getAuth(), user => {
             if (user) {
+                localStorage.setItem('isLoggedIn', true);
                 if (user.email === 'yhaidari99@gmail.com') {
                     this.isAdmin = true;
                 }
                 console.log(user.email)
             } else {
+                localStorage.removeItem('isLoggedIn');
                 console.log("No user signed in")
                 this.$router.push({ name: 'Register' });
             }
@@ -409,5 +411,18 @@ td>button {
         padding: 5px;
     }
 
+}
+
+@media screen and (max-width: 700px) {
+    .NavBarComp {
+        min-width: 132vw;
+    }
+    #headerContainer{
+        min-width: 132vw;
+    }
+    .FooterComp{
+        min-width: 132vw;
+    }
+    
 }
 </style>
