@@ -8,7 +8,7 @@ $request = explode('/', trim($path_info,'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
 // connect to the mysql database, provide the appropriate credentials
-$conn = mysqli_connect('feenix-mariadb.swin.edu.au', 's104608220', '010104', 's104608220_db');
+$conn = mysqli_connect('feenix-mariadb.swin.edu.au', 's104608220', 'pwd', 's(studentID_db');
 mysqli_set_charset($conn,'utf8');
 
 // initialise the table name accordingly

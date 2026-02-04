@@ -2,7 +2,7 @@
     <NavBarComp :Livecoordinates="`lat: ${center.lat}, lng: ${center.lng}`"/>
     <GoogleMap
     ref="map"
-      api-key="AIzaSyCBOwKCfojuQAZcBOxmUulYBsfcRRtR9LU"
+      api-key="apikey"
       map-id="cd40dee7984fbb4a"
       style="width: 100%; height: 1000px;"
       :center="center"

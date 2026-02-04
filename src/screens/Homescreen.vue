@@ -155,7 +155,7 @@ export default {
             }
             try {
                 const response =
-                    await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCBOwKCfojuQAZcBOxmUulYBsfcRRtR9LU`);
+                    await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=apikey`);
                 const data = response.data;
                 if (data.status === 'OK') {
                     const components = data.results[0].address_components;
